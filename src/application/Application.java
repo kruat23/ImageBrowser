@@ -10,7 +10,8 @@ public class Application {
     	
     	try { 
             form = new Login();  
-            form.setSize(300, 100); 
+            form.setSize(300, 125); 
+            form.setLocation(800, 500);
             form.setVisible(true);  
         } catch(Exception e) { 
             JOptionPane.showMessageDialog(null, e.getMessage());  

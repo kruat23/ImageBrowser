@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -56,29 +57,31 @@ public class Login extends JFrame implements ActionListener {
 		SecurityUtils.setSecurityManager(securityManager);
 		
 		userLabel = new JLabel();  
-		userLabel.setText("Username"); 
+		userLabel.setText("Felhasználónév"); 
 		user_textField = new JTextField(15);
 		
 		passLabel = new JLabel(); 
-		passLabel.setText("Password");
+		passLabel.setText("Jelszó");
 		pass_textField = new JPasswordField(15);
 		
-		submit = new JButton("Submit");
+		submit = new JButton("Belépés");
 		
 		panel = new JPanel(new GridLayout(3, 1));  
 		panel.add(userLabel);    
 		panel.add(user_textField);     
 		panel.add(passLabel);     
 		panel.add(pass_textField);   
-		panel.add(submit); 		
+		panel.add(submit);		
 		add(panel, BorderLayout.CENTER);
 		
 		submit.addActionListener(this);
-		setTitle("Login"); 
+		setTitle("Bejelentkezés"); 
 	}  
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
+		JFrame frame = new JFrame();  
 		
 		String userValue = user_textField.getText();
 		String passValue = pass_textField.getText();
@@ -91,18 +94,17 @@ public class Login extends JFrame implements ActionListener {
 		    
 		    try {
 		        currentUser.login(token);
-		        System.out.println("User [" + currentUser.getPrincipal() + "] logged in successfully.");
+		        JOptionPane.showMessageDialog(frame, "A felhasználó [" + currentUser.getPrincipal() + "] sikeresen bejelentkezett.");		        
 		        new Browser();
 		        Application.form.setVisible(false);
 		    } catch (UnknownAccountException uae) {
-		        System.out.println("There is no user with username of " + token.getPrincipal());
+		    	JOptionPane.showMessageDialog(frame, "Ezzel a névvel [" + token.getPrincipal() + "] nincs regisztrált felhasználó.", "Felhasználó nem található", JOptionPane.ERROR_MESSAGE);		        
 		    } catch (IncorrectCredentialsException ice) {
-		        System.out.println("Password for account " + token.getPrincipal() + " was incorrect!");
+		    	JOptionPane.showMessageDialog(frame, "A felhasználónévhez [" + token.getPrincipal() + "] megadott jelszó helytelen.", "Hibás jelszó", JOptionPane.ERROR_MESSAGE);
 		    } catch (LockedAccountException lae) {
-		        System.out.println("The account for username " + token.getPrincipal() + " is locked.  " +
-		                "Please contact your administrator to unlock it.");
+		    	JOptionPane.showMessageDialog(frame, "A felhasználónévhez [" + token.getPrincipal() + "] tartozó fiók zárolt.", "Zárolt fiók", JOptionPane.ERROR_MESSAGE);
 		    } catch (AuthenticationException ae) {
-		    	System.out.println("Unexpected error.");
+		    	JOptionPane.showMessageDialog(frame, "Ismeretlen hiba.", "Hitelesítési hiba", JOptionPane.ERROR_MESSAGE);	    	
 		    }
 		}		
 	}
