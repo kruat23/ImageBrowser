@@ -1,6 +1,8 @@
 package application;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,10 +39,49 @@ public class DBRealm extends JdbcRealm {
         });
 
     }
+    
+    private Connection connect() {
+        String url = "jdbc:sqlite:users_db.db";
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(url);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return conn;
+    }
 
     protected Set<String> getPermissions(Connection conn, String roleString) throws SQLException {
         List<String> roleNames = new ArrayList<String>();
         roleNames.add(roleString);
         return super.getPermissions(conn, "", roleNames);
+    }
+    
+    protected String addPermission() throws SQLException {
+    	String sql = "UPDATE roles_permissions SET permission = ? " + "WHERE role_name = ?";
+    	
+        try (Connection conn = this.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, "all");
+            pstmt.setString(2, "user_role");
+            pstmt.executeUpdate();
+            return "Jogosultság megadva."; 
+        } catch (SQLException e) {
+            return e.getMessage();
+        }		   	
+    }
+    
+    protected String removePermission() throws SQLException {
+    	String sql = "UPDATE roles_permissions SET permission = ? " + "WHERE role_name = ?";
+    	
+        try (Connection conn = this.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, "only_png");
+            pstmt.setString(2, "user_role");
+            pstmt.executeUpdate();
+            return "Jogosultság megvonva."; 
+        } catch (SQLException e) {
+            return e.getMessage();
+        }		   	
     }
 }
