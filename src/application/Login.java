@@ -95,7 +95,7 @@ public class Login extends JFrame implements ActionListener {
 		    try {
 		        currentUser.login(token);
 		        JOptionPane.showMessageDialog(frame, "A felhasználó [" + currentUser.getPrincipal() + "] sikeresen bejelentkezett.");		        
-		        new Browser();
+		        new Browser(currentUser);
 		        Application.form.setVisible(false);
 		    } catch (UnknownAccountException uae) {
 		    	JOptionPane.showMessageDialog(frame, "Ezzel a névvel [" + token.getPrincipal() + "] nincs regisztrált felhasználó.", "Felhasználó nem található", JOptionPane.ERROR_MESSAGE);		        
@@ -108,5 +108,4 @@ public class Login extends JFrame implements ActionListener {
 		    }
 		}		
 	}
-
 }
